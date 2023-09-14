@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+      body {
+        font-family: "Times New Roman", Times, serif;
+      }
+
+      .container {
+        max-width: 400px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #565656;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+      }
+
+      h1 {
+        text-align: center;
+      }
+
+      label {
+        display: block;
+        margin-bottom: 10px;
+      }
+
+      input[type="number"] {
+        width: 50%;
+        padding: 10px;
+        margin-bottom: 10px;
+      }
+
+      button {
+        background-color: #000000;
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-right: 10px;
+      }
+
+      #result {
+        margin-top: 20px;
+        padding: 10px;
+        background-color: #fff;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        color: red;
+      }
+    </style>
+    <title>Coding Challenge 1</title>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Coding Challenge 1</h1>
+      <form id="numberForm">
+        <label for="numberInput">Enter a number (0-999999):</label>
+        <input type="number" id="numberInput" min="0" max="999999" />
+        <button type="button" id="convertButton">Convert</button>
+      </form>
+      <div id="result"></div>
+      <button type="button" id="clearButton">Clear</button>
+    </div>
+
+    <script>
+      // Function to convert a number to words
+      function convertToWords(num) {
+        const ones = [
+          "",
+          "One",
+          "Two",
+          "Three",
+          "Four",
+          "Five",
+          "Six",
+          "Seven",
+          "Eight",
+          "Nine",
+        ];
+        const teens = [
+          "",
+          "Eleven",
+          "Twelve",
+          "Thirteen",
+          "Fourteen",
+          "Fifteen",
+          "Sixteen",
+          "Seventeen",
+          "Eighteen",
+          "Nineteen",
+        ];
+        const tens = [
+          "",
+          "Ten",
+          "Twenty",
+          "Thirty",
+          "Forty",
+          "Fifty",
+          "Sixty",
+          "Seventy",
+          "Eighty",
+          "Ninety",
+        ];
+
+        if (num === 0) {
+          return "Zero";
+        }
+
+        let result = "";
+
+        if (num >= 100000) {
+          result += ones[Math.floor(num / 100000)] + " Hundred ";
+          num %= 100000;
+        }
+
+        if (num >= 1000) {
+          result += convertToWords(Math.floor(num / 1000)) + " Thousand ";
+          num %= 1000;
+        }
+
+        if (num >= 100) {
+          result += ones[Math.floor(num / 100)] + " Hundred ";
+          num %= 100;
+        }
+
+        if (num >= 20) {
+          result += tens[Math.floor(num / 10)];
+          if (num % 10 !== 0) {
+            result += " " + ones[num % 10];
+          }
+        } else if (num >= 1) {
+          result += ones[num];
+        }
+
+        return result.trim();
+      }
+
+      // Function to handle the "Convert" button click
+      function handleConvertClick() {
+        const numberInput = document.getElementById("numberInput").value;
+        const resultDiv = document.getElementById("result");
+
+        if (numberInput >= 0 && numberInput <= 999999) {
+          const words = convertToWords(Number(numberInput));
+          resultDiv.textContent = `Your number is ${words}`;
+        } else {
+          resultDiv.textContent = "Number out of range (0-999999)";
+        }
+      }
+
+      // Function to clear the form
+      function clearForm() {
+        document.getElementById("numberInput").value = "";
+        document.getElementById("result").textContent = "";
+      }
+
+      // Attach the click event handlers to the buttons
+      const convertButton = document.getElementById("convertButton");
+      const clearButton = document.getElementById("clearButton");
+
+      convertButton.addEventListener("click", handleConvertClick);
+      clearButton.addEventListener("click", clearForm);
+    </script>
+  </body>
+</html>
