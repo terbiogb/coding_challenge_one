@@ -66,9 +66,9 @@
     </div>
 
     <script>
-      // Function to convert a number to words
-      function convertToWords(num) {
-        const ones = [
+      function test(n) {
+        if (n < 0) return false;
+        single_digit = [
           "",
           "One",
           "Two",
@@ -80,8 +80,8 @@
           "Eight",
           "Nine",
         ];
-        const teens = [
-          "",
+        double_digit = [
+          "Ten",
           "Eleven",
           "Twelve",
           "Thirteen",
@@ -92,9 +92,7 @@
           "Eighteen",
           "Nineteen",
         ];
-        const tens = [
-          "",
-          "Ten",
+        below_hundred = [
           "Twenty",
           "Thirty",
           "Forty",
@@ -104,38 +102,42 @@
           "Eighty",
           "Ninety",
         ];
+        if (n === 0) return "Zero";
 
-        if (num === 0) {
-          return "Zero";
-        }
-
-        let result = "";
-
-        if (num >= 100000) {
-          result += ones[Math.floor(num / 100000)] + " Hundred ";
-          num %= 100000;
-        }
-
-        if (num >= 1000) {
-          result += convertToWords(Math.floor(num / 1000)) + " Thousand ";
-          num %= 1000;
-        }
-
-        if (num >= 100) {
-          result += ones[Math.floor(num / 100)] + " Hundred ";
-          num %= 100;
-        }
-
-        if (num >= 20) {
-          result += tens[Math.floor(num / 10)];
-          if (num % 10 !== 0) {
-            result += " " + ones[num % 10];
+        function translate(n) {
+          word = "";
+          if (n < 10) {
+            word = single_digit[n] + " ";
+          } else if (n < 20) {
+            word = double_digit[n - 10] + " ";
+          } else if (n < 100) {
+            rem = translate(n % 10);
+            word = below_hundred[Math.trunc(n / 10) - 2] + " " + rem;
+          } else if (n < 1000) {
+            word =
+              single_digit[Math.trunc(n / 100)] +
+              " Hundred " +
+              translate(n % 100);
+          } else if (n < 1000000) {
+            word =
+              translate(parseInt(n / 1000)).trim() +
+              " Thousand " +
+              translate(n % 1000);
+          } else if (n < 1000000000) {
+            word =
+              translate(parseInt(n / 1000000)).trim() +
+              " Million " +
+              translate(n % 1000000);
+          } else {
+            word =
+              translate(parseInt(n / 1000000000)).trim() +
+              " Billion " +
+              translate(n % 1000000000);
           }
-        } else if (num >= 1) {
-          result += ones[num];
+          return word;
         }
-
-        return result.trim();
+        result = translate(n);
+        return result.trim() + ".";
       }
 
       // Function to handle the "Convert" button click
@@ -144,7 +146,7 @@
         const resultDiv = document.getElementById("result");
 
         if (numberInput >= 0 && numberInput <= 999999) {
-          const words = convertToWords(Number(numberInput));
+          const words = test(Number(numberInput));
           resultDiv.textContent = `Your number is ${words}`;
         } else {
           resultDiv.textContent = "Number out of range (0-999999)";
